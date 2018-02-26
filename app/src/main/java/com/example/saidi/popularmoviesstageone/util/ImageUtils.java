@@ -2,10 +2,6 @@ package com.example.saidi.popularmoviesstageone.util;
 
 import android.net.Uri;
 
-/**
- * Created by saidi on 23/02/2018.
- */
-
 public class ImageUtils {
 
 

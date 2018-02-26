@@ -1,10 +1,15 @@
 package com.example.saidi.popularmoviesstageone;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.example.saidi.popularmoviesstageone.data.MovieService;
 import com.example.saidi.popularmoviesstageone.data.ServiceManager;
@@ -35,23 +40,69 @@ public class MoviesHomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movies_home);
         ButterKnife.bind(this);
 
-         mGridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,
+        mGridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,
                 false);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_layout_margin);
 
-         mMovieRecyclerView.addItemDecoration(new MovieGridSpacingItemDecoration(2, spacingInPixels, true, 0));
-        loadData();
+        mMovieRecyclerView.addItemDecoration(
+                new MovieGridSpacingItemDecoration(2, spacingInPixels, true, 0));
+        getMostPopularMovies();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.setting_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.top_rated:
+                getTopRatedMovies();
+                return true;
+            case R.id.most_popular:
+                getMostPopularMovies();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
 
     }
 
     private void setData(List<Movie> movies) {
         MoviesListAdapter moviesListAdapter = new MoviesListAdapter(this, movies);
         mMovieRecyclerView.setAdapter(moviesListAdapter);
-
         mMovieRecyclerView.setLayoutManager(mGridLayoutManager);
+
     }
 
-    private List<Movie> loadData() {
+    private void startRecyclerViewAnimation() {
+        mMovieRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+
+                    @Override
+                    public boolean onPreDraw() {
+                        mMovieRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                        for (int i = 0; i < mMovieRecyclerView.getChildCount(); i++) {
+                            View v = mMovieRecyclerView.getChildAt(i);
+                            v.setAlpha(0.0f);
+                            v.animate().alpha(1.0f)
+                                    .setDuration(300)
+                                    .setStartDelay(i * 50)
+                                    .start();
+                        }
+
+                        return true;
+                    }
+                });
+    }
+
+    private List<Movie> getMostPopularMovies() {
         final List<Movie> moviesList = new ArrayList<>();
         ServiceManager.createService(MovieService.class).getPopularMovies().enqueue(
                 new Callback<MovieList>() {
@@ -62,11 +113,40 @@ public class MoviesHomeActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<MovieList> call, Throwable t) {
-
+                        onErrorMessage();
                     }
                 });
 
         return moviesList;
+    }
+
+    private List<Movie> getTopRatedMovies() {
+        final List<Movie> moviesList = new ArrayList<>();
+        ServiceManager.createService(MovieService.class).getTopRatedMovies().enqueue(
+                new Callback<MovieList>() {
+                    @Override
+                    public void onResponse(Call<MovieList> call, Response<MovieList> response) {
+                        setData(response.body().getMovies());
+                    }
+
+                    @Override
+                    public void onFailure(Call<MovieList> call, Throwable t) {
+                        onErrorMessage();
+                    }
+                });
+
+        return moviesList;
+    }
+
+    private void onErrorMessage() {
+        Snackbar errorSnackBar = Snackbar.make(findViewById(R.id.container),
+                R.string.message_error, Snackbar.LENGTH_SHORT);
+        errorSnackBar.setAction(R.string.ok, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        errorSnackBar.show();
     }
 
 

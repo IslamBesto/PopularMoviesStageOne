@@ -46,8 +46,6 @@ public class ServiceManager {
             retrofit = builder.build();
         }
 
-
-
         return retrofit.create(serviceClass);
     }
 

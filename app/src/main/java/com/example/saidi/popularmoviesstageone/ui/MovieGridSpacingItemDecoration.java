@@ -5,7 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Created by saidi on 23/02/2018.
+ * I used this code
+ * https://gist.github.com/liangzhitao/e57df3c3232ee446d464
  */
 
 public class MovieGridSpacingItemDecoration extends RecyclerView.ItemDecoration {

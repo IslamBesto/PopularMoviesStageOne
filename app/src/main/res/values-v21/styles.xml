@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -8,6 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorPrimaryDark</item>
         <item name="android:actionOverflowButtonStyle">@style/SortActionButtonOverflow</item>
+        <item name="android:windowExitTransition">@transition/main_exit</item>
+        <item name="android:windowReenterTransition">@transition/main_reenter</item>
     </style>
 
     <style name="DetailActivityTheme" parent="Theme.AppCompat.NoActionBar">
@@ -15,10 +17,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorPrimaryDark</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowEnterTransition">@transition/detail_enter</item>
     </style>
-
-    <style name="SortActionButtonOverflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_sort_white</item>
-    </style>
-
 </resources>

@@ -5,4 +5,12 @@
 
     <string name="message_error">Something went wrong</string>
     <string name="ok">OK</string>
+    <string name="family">Family</string>
+    <string name="adult">Adult</string>
+    <string name="votes">Votes</string>
+    <string name="overview">Overview :</string>
+    <string name="poster_image">poster image</string>
+    <string name="back_drop_image">back drop image</string>
+    <string name="picture_transition_name">poster_image_transition</string>
+    <string name="home">Home</string>
 </resources>

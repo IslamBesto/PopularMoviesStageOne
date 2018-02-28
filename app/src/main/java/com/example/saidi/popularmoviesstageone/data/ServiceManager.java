@@ -3,6 +3,7 @@ package com.example.saidi.popularmoviesstageone.data;
 import android.support.annotation.NonNull;
 
 import com.example.saidi.popularmoviesstageone.BuildConfig;
+import com.example.saidi.popularmoviesstageone.Constants;
 
 import java.io.IOException;
 
@@ -21,11 +22,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceManager {
 
-    private static final String BASE_URL = "https://api.themoviedb.org/3/";
+
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(Constants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create());
 
     private static Retrofit retrofit = builder.build();
@@ -46,6 +47,8 @@ public class ServiceManager {
             retrofit = builder.build();
         }
 
+
+
         return retrofit.create(serviceClass);
     }
 
@@ -58,7 +61,7 @@ public class ServiceManager {
                 HttpUrl originalHttpUrl = original.url();
 
                 HttpUrl url = originalHttpUrl.newBuilder()
-                        .addQueryParameter("api_key", BuildConfig.API_KEY)
+                        .addQueryParameter(Constants.API_KEY, BuildConfig.API_KEY)
                         .build();
 
                 Request.Builder requestBuilder = original.newBuilder()

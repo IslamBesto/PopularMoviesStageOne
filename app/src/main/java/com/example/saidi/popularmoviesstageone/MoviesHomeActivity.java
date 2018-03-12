@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
 import com.example.saidi.popularmoviesstageone.data.MovieService;
 import com.example.saidi.popularmoviesstageone.data.ServiceManager;
@@ -45,7 +44,6 @@ public class MoviesHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_home);
         ButterKnife.bind(this);
-
         mGridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,
                 false);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_layout_margin);
@@ -113,28 +111,6 @@ public class MoviesHomeActivity extends AppCompatActivity {
 
     }
 
-    private void startRecyclerViewAnimation() {
-        mMovieRecyclerView.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-
-                    @Override
-                    public boolean onPreDraw() {
-                        mMovieRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                        for (int i = 0; i < mMovieRecyclerView.getChildCount(); i++) {
-                            View v = mMovieRecyclerView.getChildAt(i);
-                            v.setAlpha(0.0f);
-                            v.animate().alpha(1.0f)
-                                    .setDuration(300)
-                                    .setStartDelay(i * 50)
-                                    .start();
-                        }
-
-                        return true;
-                    }
-                });
-    }
-
     private List<Movie> getMostPopularMovies() {
         final List<Movie> moviesList = new ArrayList<>();
         ServiceManager.createService(MovieService.class).getPopularMovies().enqueue(
@@ -181,6 +157,4 @@ public class MoviesHomeActivity extends AppCompatActivity {
         });
         errorSnackBar.show();
     }
-
-
 }

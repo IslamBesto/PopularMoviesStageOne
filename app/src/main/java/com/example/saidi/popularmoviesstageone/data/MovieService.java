@@ -1,9 +1,6 @@
 package com.example.saidi.popularmoviesstageone.data;
 
-import com.example.saidi.popularmoviesstageone.data.model.Movie;
 import com.example.saidi.popularmoviesstageone.data.model.MovieList;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

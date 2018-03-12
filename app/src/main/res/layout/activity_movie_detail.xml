@@ -6,203 +6,230 @@
     android:layout_height="match_parent"
     tools:context="com.example.saidi.popularmoviesstageone.MovieDetailActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true">
-
-            <ImageView
-                android:id="@+id/backdrop_iv"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/drop_image_height"
-                android:contentDescription="@string/back_drop_image"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                tools:src="@tools:sample/avatars" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/drop_image_height"
-                android:background="@drawable/gradient" />
-
-
-            <ImageView
-                android:id="@+id/poster_iv"
-                android:layout_width="@dimen/poster_image_width"
-                android:layout_height="@dimen/poster_image_height"
-                android:layout_marginLeft="@dimen/margin_xxlarge"
-                android:layout_marginStart="@dimen/margin_xxlarge"
-                android:layout_marginTop="@dimen/poster_margin_top"
-                android:contentDescription="@string/poster_image"
-                android:transitionName="@string/picture_transition_name"
-                tools:src="@tools:sample/avatars" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/title_layout_margin_left"
-                android:layout_marginStart="@dimen/title_layout_margin_left"
-                android:layout_marginTop="@dimen/title_layout_margin_top"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/title_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@color/textColor"
-                    tools:text="Black Panthers" />
-
-                <TextView
-                    android:id="@+id/release_date_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.7"
-                    android:textColor="@color/textColor"
-                    tools:text="March 2017 PG 129 minutes" />
-            </LinearLayout>
-
-        </FrameLayout>
-
+        android:layout_height="match_parent">
 
         <View
-            android:id="@+id/view_divider"
+            android:id="@+id/background_view"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginEnd="@dimen/margin_xxlarge"
-            android:layout_marginStart="@dimen/margin_xxlarge"
-            android:layout_marginTop="@dimen/margin_large"
-            android:background="@color/colorAccent" />
+            android:layout_height="@dimen/drop_image_height" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
+
+            <FrameLayout
+                android:id="@+id/backdrop_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true">
+
+                <ImageView
+                    android:id="@+id/backdrop_iv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/drop_image_height"
+                    android:contentDescription="@string/back_drop_image"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    tools:src="@tools:sample/avatars" />
+
+
+                <ImageView
+                    android:id="@+id/tv_detail_gradient_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/drop_image_height"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/mask_detail" />
+
+
+                <ImageView
+                    android:id="@+id/poster_iv"
+                    android:layout_width="@dimen/poster_image_width"
+                    android:layout_height="@dimen/poster_image_height"
+                    android:layout_marginLeft="@dimen/margin_xxlarge"
+                    android:layout_marginStart="@dimen/margin_xxlarge"
+                    android:layout_marginTop="@dimen/poster_margin_top"
+                    android:contentDescription="@string/poster_image"
+                    android:transitionName="@string/picture_transition_name"
+                    tools:src="@tools:sample/avatars" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/title_layout_margin_left"
+                    android:layout_marginStart="@dimen/title_layout_margin_left"
+                    android:layout_marginTop="@dimen/title_layout_margin_top"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_medium">
+
+                    <TextView
+                        android:id="@+id/title_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/textColor"
+                        tools:text="Black Panthers" />
+
+                    <TextView
+                        android:id="@+id/release_date_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.7"
+                        android:textColor="@color/textColor"
+                        tools:text="March 2017 PG 129 minutes" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+
+            <View
+                android:id="@+id/view_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="@dimen/margin_xxlarge"
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_large"
+                android:background="@color/colorAccent" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/floatingActionButton3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_large"
+                        app:srcCompat="@drawable/ic_star_rate" />
+
+                    <TextView
+                        android:id="@+id/vote_average_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:textColor="@color/textColor"
+                        tools:text="7.7" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/floatingActionButton2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_large"
+                        app:srcCompat="@drawable/ic_rate_review" />
+
+                    <TextView
+                        android:id="@+id/vote_count_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:textColor="@color/textColor"
+                        tools:text="160 votes" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/floatingActionButton1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_large"
+                        app:srcCompat="@drawable/ic_people" />
+
+                    <TextView
+                        android:id="@+id/adult_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:textColor="@color/textColor"
+                        tools:text="@string/family" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <View
+                android:id="@+id/view_divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="@dimen/margin_xxlarge"
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_large"
+                android:background="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_xxlarge"
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_large"
+                android:text="@string/overview"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/textColor" />
+
+            <TextView
+                android:id="@+id/overview_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_xxlarge"
                 android:layout_marginRight="@dimen/margin_large"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_marginStart="@dimen/margin_xxlarge"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:alpha="0.7"
+                android:lineSpacingExtra="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/textColor"
+                tools:text="Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas " />
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/floatingActionButton3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_large"
-                    app:srcCompat="@drawable/ic_star_rate" />
-
-                <TextView
-                    android:id="@+id/vote_average_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:textColor="@color/textColor"
-                    tools:text="7.7" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_large"
-                android:layout_marginRight="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_large"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/floatingActionButton2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_large"
-                    app:srcCompat="@drawable/ic_rate_review" />
-
-                <TextView
-                    android:id="@+id/vote_count_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:textColor="@color/textColor"
-                    tools:text="160 votes" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_large"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/floatingActionButton1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_large"
-                    app:srcCompat="@drawable/ic_people" />
-
-                <TextView
-                    android:id="@+id/adult_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:textColor="@color/textColor"
-                    tools:text="@string/family" />
-
-            </LinearLayout>
         </LinearLayout>
 
-
-        <View
-            android:id="@+id/view_divider2"
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginEnd="@dimen/margin_xxlarge"
-            android:layout_marginStart="@dimen/margin_xxlarge"
-            android:layout_marginTop="@dimen/margin_large"
-            android:background="@color/colorAccent" />
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_xxlarge"
-            android:layout_marginStart="@dimen/margin_xxlarge"
-            android:layout_marginTop="@dimen/margin_large"
-            android:text="@string/overview"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/textColor" />
+            android:paddingTop="@dimen/margin_large"
+            app:theme="@style/CustomActionBar" />
+    </RelativeLayout>
 
-        <TextView
-            android:id="@+id/overview_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginLeft="@dimen/margin_xxlarge"
-            android:layout_marginRight="@dimen/margin_large"
-            android:layout_marginStart="@dimen/margin_xxlarge"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:lineSpacingExtra="2dp"
-            android:alpha="0.7"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/textColor"
-            tools:text="Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas " />
 
-    </LinearLayout>
 </ScrollView>

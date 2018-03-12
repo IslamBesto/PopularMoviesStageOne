@@ -25,7 +25,8 @@
             android:name=".MovieDetailActivity"
             android:theme="@style/DetailActivityTheme"
             android:parentActivityName=".MoviesHomeActivity"
-            tools:targetApi="jelly_bean" />
+            tools:targetApi="jelly_bean"
+            android:label=""/>
 
         <meta-data
             android:name="preloaded_fonts"

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.saidi.popularmoviesstageone.R;
 import com.example.saidi.popularmoviesstageone.data.model.Movie;
@@ -22,18 +21,20 @@ import butterknife.ButterKnife;
 public class MoviesListAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private List<Movie> mMovies;
+    private MovieListClickLisener mListener;
 
     public MoviesListAdapter(Context context,
-            List<Movie> movies) {
+            List<Movie> movies, MovieListClickLisener listener) {
         mContext = context;
         mMovies = movies;
+        mListener = listener;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View movieView = LayoutInflater.from(mContext).inflate(R.layout.item_movie_list, parent,
                 false);
-        return new MovieHolder(movieView);
+        return new MovieHolder(movieView, mListener);
     }
 
     @Override
@@ -49,20 +50,35 @@ public class MoviesListAdapter extends RecyclerView.Adapter {
     }
 
 
-    public class MovieHolder extends RecyclerView.ViewHolder {
+    public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.movie_item_image)
         ImageView mMovieIv;
 
+        private Movie mMovie;
 
-        MovieHolder(View itemView) {
+        private MovieListClickLisener mListener;
+
+        MovieHolder(View itemView, MovieListClickLisener listener) {
             super(itemView);
+            mListener = listener;
+            itemView.setOnClickListener(this);
             ButterKnife.bind(this, itemView);
         }
 
         public void setData(Movie movie) {
-            String posterPathUrl = ImageUtils.buildPosterPath(movie.getPosterPath());
+            String posterPathUrl = ImageUtils.buildPosterPath(movie.getPosterPath(), "w185");
             Picasso.with(mContext).load(posterPathUrl).into(mMovieIv);
+            mMovie = movie;
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                mListener.onMovieClick(v, getAdapterPosition(), mMovie);
+            }
         }
     }
 }

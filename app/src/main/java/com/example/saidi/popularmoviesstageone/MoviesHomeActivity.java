@@ -1,5 +1,7 @@
 package com.example.saidi.popularmoviesstageone;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import com.example.saidi.popularmoviesstageone.data.ServiceManager;
 import com.example.saidi.popularmoviesstageone.data.model.Movie;
 import com.example.saidi.popularmoviesstageone.data.model.MovieList;
 import com.example.saidi.popularmoviesstageone.ui.MovieGridSpacingItemDecoration;
+import com.example.saidi.popularmoviesstageone.ui.MovieListClickLisener;
 import com.example.saidi.popularmoviesstageone.ui.MoviesListAdapter;
 
 import java.util.ArrayList;
@@ -29,8 +32,11 @@ import retrofit2.Response;
 
 public class MoviesHomeActivity extends AppCompatActivity {
 
+
     @BindView(R.id.movies_rv)
     RecyclerView mMovieRecyclerView;
+
+    MovieListClickLisener mMovieListClickLisener;
 
     private GridLayoutManager mGridLayoutManager;
 
@@ -46,8 +52,34 @@ public class MoviesHomeActivity extends AppCompatActivity {
 
         mMovieRecyclerView.addItemDecoration(
                 new MovieGridSpacingItemDecoration(2, spacingInPixels, true, 0));
+        mMovieListClickLisener = new MovieListClickLisener() {
+            @Override
+            public void onMovieClick(View view, int position, Movie movie) {
+                onMovieItemClickBehavior(view, movie);
+            }
+        };
         getMostPopularMovies();
 
+    }
+
+    private void onMovieItemClickBehavior(View view, Movie movie) {
+        ActivityOptions options;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            options = ActivityOptions.makeSceneTransitionAnimation(MoviesHomeActivity.this, view,
+                    getBaseContext().getString(
+
+
+                            R.string.picture_transition_name));
+            Intent detailMovieIntent = new Intent(MoviesHomeActivity.this,
+                    MovieDetailActivity.class);
+            detailMovieIntent.putExtra(Constants.MOVIE, movie);
+            startActivity(detailMovieIntent, options.toBundle());
+        } else {
+            Intent detailMovieIntent = new Intent(MoviesHomeActivity.this,
+                    MovieDetailActivity.class);
+            detailMovieIntent.putExtra(Constants.MOVIE, movie);
+            startActivity(detailMovieIntent);
+        }
     }
 
     @Override
@@ -74,7 +106,8 @@ public class MoviesHomeActivity extends AppCompatActivity {
     }
 
     private void setData(List<Movie> movies) {
-        MoviesListAdapter moviesListAdapter = new MoviesListAdapter(this, movies);
+        MoviesListAdapter moviesListAdapter = new MoviesListAdapter(this, movies,
+                mMovieListClickLisener);
         mMovieRecyclerView.setAdapter(moviesListAdapter);
         mMovieRecyclerView.setLayoutManager(mGridLayoutManager);
 

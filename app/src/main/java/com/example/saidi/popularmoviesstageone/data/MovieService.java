@@ -2,6 +2,7 @@ package com.example.saidi.popularmoviesstageone.data;
 
 import com.example.saidi.popularmoviesstageone.data.model.MovieList;
 import com.example.saidi.popularmoviesstageone.data.model.Review;
+import com.example.saidi.popularmoviesstageone.data.model.ReviewList;
 import com.example.saidi.popularmoviesstageone.data.model.Trailer;
 
 import java.util.List;
@@ -23,5 +24,5 @@ public interface MovieService {
     Call<List<Trailer>> getTrailerVideos(@Path("id") String movieId);
 
     @GET("movie/{id}/reviews")
-    Call<List<Review>> getMovieReview(@Path("id") String movieId);
+    Call<ReviewList> getMovieReview(@Path("id") String movieId);
 }

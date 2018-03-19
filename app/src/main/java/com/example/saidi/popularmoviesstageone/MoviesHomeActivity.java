@@ -111,7 +111,7 @@ public class MoviesHomeActivity extends AppCompatActivity {
 
     }
 
-    private List<Movie> getMostPopularMovies() {
+    private void getMostPopularMovies() {
         final List<Movie> moviesList = new ArrayList<>();
         ServiceManager.createService(MovieService.class).getPopularMovies().enqueue(
                 new Callback<MovieList>() {
@@ -125,11 +125,9 @@ public class MoviesHomeActivity extends AppCompatActivity {
                         onErrorMessage();
                     }
                 });
-
-        return moviesList;
     }
 
-    private List<Movie> getTopRatedMovies() {
+    private void getTopRatedMovies() {
         final List<Movie> moviesList = new ArrayList<>();
         ServiceManager.createService(MovieService.class).getTopRatedMovies().enqueue(
                 new Callback<MovieList>() {
@@ -143,8 +141,6 @@ public class MoviesHomeActivity extends AppCompatActivity {
                         onErrorMessage();
                     }
                 });
-
-        return moviesList;
     }
 
     private void onErrorMessage() {

@@ -17,16 +17,26 @@ import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.saidi.popularmoviesstageone.data.MovieService;
+import com.example.saidi.popularmoviesstageone.data.ServiceManager;
 import com.example.saidi.popularmoviesstageone.data.model.Movie;
+import com.example.saidi.popularmoviesstageone.data.model.Review;
+import com.example.saidi.popularmoviesstageone.data.model.ReviewList;
+import com.example.saidi.popularmoviesstageone.ui.custom.ReviewView;
 import com.example.saidi.popularmoviesstageone.util.ImageUtils;
 import com.example.saidi.popularmoviesstageone.util.PaletteUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -66,6 +76,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_detail_gradient_picture)
     ImageView mGradientView;
 
+    @BindView(R.id.container)
+    LinearLayout mContainer;
+
     private boolean mIsImageAnimated = false;
 
     @Override
@@ -87,6 +100,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Movie movie = (Movie) intent.getSerializableExtra(Constants.MOVIE);
+        getReviews(movie.getMovieId());
         populateUI(movie);
     }
 
@@ -151,6 +165,29 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .setDuration(500).setInterpolator(new DecelerateInterpolator());
             mBackdropContainer.animate().alpha(1).setDuration(800)
                     .setInterpolator(new DecelerateInterpolator()).setStartDelay(200);
+        }
+    }
+
+    private void getReviews(String movieId) {
+        ServiceManager.createService(MovieService.class).getMovieReview(movieId).enqueue(new retrofit2.Callback<ReviewList>() {
+            @Override
+            public void onResponse(Call<ReviewList> call, Response<ReviewList> response) {
+                setReviewText(response.body().getReviewList());
+            }
+
+            @Override
+            public void onFailure(Call<ReviewList> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void setReviewText(List<Review> reviews) {
+        for (Review review : reviews) {
+            ReviewView reviewView = new ReviewView(this);
+            reviewView.setReviewText(review.getContent());
+            mContainer.addView(reviewView);
+
         }
     }
 }

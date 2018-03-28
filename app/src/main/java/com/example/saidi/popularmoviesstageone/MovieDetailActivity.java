@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -19,13 +20,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.saidi.popularmoviesstageone.data.MovieService;
 import com.example.saidi.popularmoviesstageone.data.ServiceManager;
 import com.example.saidi.popularmoviesstageone.data.model.Movie;
 import com.example.saidi.popularmoviesstageone.data.model.Review;
 import com.example.saidi.popularmoviesstageone.data.model.ReviewList;
+import com.example.saidi.popularmoviesstageone.data.model.Trailer;
+import com.example.saidi.popularmoviesstageone.data.model.TrailerList;
 import com.example.saidi.popularmoviesstageone.ui.custom.ReviewView;
+import com.example.saidi.popularmoviesstageone.ui.viewpager.CardTrailerAdapter;
+import com.example.saidi.popularmoviesstageone.ui.viewpager.ShadowTransformer;
 import com.example.saidi.popularmoviesstageone.util.ImageUtils;
 import com.example.saidi.popularmoviesstageone.util.PaletteUtils;
 import com.squareup.picasso.Callback;
@@ -79,6 +85,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     @BindView(R.id.container)
     LinearLayout mContainer;
 
+    @BindView(R.id.trailer_vp)
+    ViewPager mTrailerVp;
+
     private boolean mIsImageAnimated = false;
 
     @Override
@@ -100,7 +109,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Movie movie = (Movie) intent.getSerializableExtra(Constants.MOVIE);
-        getReviews(movie.getMovieId());
+        String movieId = movie.getMovieId();
+        getReviews(movieId);
+        getTrailers(movieId);
         populateUI(movie);
     }
 
@@ -182,6 +193,20 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void getTrailers(String movieId) {
+        ServiceManager.createService(MovieService.class).getTrailerVideos(movieId).enqueue(new retrofit2.Callback<TrailerList>() {
+            @Override
+            public void onResponse(Call<TrailerList> call, Response<TrailerList> response) {
+                setTrailer(response.body().getTrailers());
+            }
+
+            @Override
+            public void onFailure(Call<TrailerList> call, Throwable t) {
+                Toast.makeText(MovieDetailActivity.this, "FAilure", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void setReviewText(List<Review> reviews) {
         for (Review review : reviews) {
             ReviewView reviewView = new ReviewView(this);
@@ -189,5 +214,14 @@ public class MovieDetailActivity extends AppCompatActivity {
             mContainer.addView(reviewView);
 
         }
+    }
+
+    public void setTrailer(List<Trailer> trailer) {
+        CardTrailerAdapter cardAdapter = new CardTrailerAdapter(getBaseContext(), trailer);
+        ShadowTransformer shadowTransformer = new ShadowTransformer(mTrailerVp, cardAdapter);
+        mTrailerVp.setAdapter(cardAdapter);
+        mTrailerVp.setPageTransformer(false, shadowTransformer);
+        mTrailerVp.setOffscreenPageLimit(3);
+
     }
 }

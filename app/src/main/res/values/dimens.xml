@@ -15,5 +15,6 @@
     <dimen name="poster_margin_top">150dp</dimen>
     <dimen name="title_layout_margin_left">144dp</dimen>
     <dimen name="title_layout_margin_top">210dp</dimen>
+    <dimen name="card_padding">60dp</dimen>
 
 </resources>

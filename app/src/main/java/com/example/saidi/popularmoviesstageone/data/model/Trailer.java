@@ -50,4 +50,19 @@ public class Trailer implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
+
+    public String buildThumbnails() {
+        StringBuilder thumbnailsLink = new StringBuilder()
+                .append("https://img.youtube.com/vi/")
+                .append(getKey()+"/")
+                .append("0.jpg");
+        return thumbnailsLink.toString();
+    }
+
+    public String getVideoLink() {
+        StringBuilder trailerVideoLink = new StringBuilder()
+                .append("https://www.youtube.com/watch?v=")
+                .append(getKey());
+        return trailerVideoLink.toString();
+    }
 }

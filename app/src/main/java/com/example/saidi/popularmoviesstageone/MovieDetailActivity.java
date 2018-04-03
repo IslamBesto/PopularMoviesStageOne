@@ -88,6 +88,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     @BindView(R.id.trailer_vp)
     ViewPager mTrailerVp;
 
+    @BindView(R.id.review_label)
+    TextView mReviewLabel;
+
     private boolean mIsImageAnimated = false;
 
     @Override
@@ -180,39 +183,46 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void getReviews(String movieId) {
-        ServiceManager.createService(MovieService.class).getMovieReview(movieId).enqueue(new retrofit2.Callback<ReviewList>() {
-            @Override
-            public void onResponse(Call<ReviewList> call, Response<ReviewList> response) {
-                setReviewText(response.body().getReviewList());
-            }
+        ServiceManager.createService(MovieService.class).getMovieReview(movieId).enqueue(
+                new retrofit2.Callback<ReviewList>() {
+                    @Override
+                    public void onResponse(Call<ReviewList> call, Response<ReviewList> response) {
+                        setReviewText(response.body().getReviewList());
+                    }
 
-            @Override
-            public void onFailure(Call<ReviewList> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<ReviewList> call, Throwable t) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void getTrailers(String movieId) {
-        ServiceManager.createService(MovieService.class).getTrailerVideos(movieId).enqueue(new retrofit2.Callback<TrailerList>() {
-            @Override
-            public void onResponse(Call<TrailerList> call, Response<TrailerList> response) {
-                setTrailer(response.body().getTrailers());
-            }
+        ServiceManager.createService(MovieService.class).getTrailerVideos(movieId).enqueue(
+                new retrofit2.Callback<TrailerList>() {
+                    @Override
+                    public void onResponse(Call<TrailerList> call, Response<TrailerList> response) {
+                        setTrailer(response.body().getTrailers());
+                    }
 
-            @Override
-            public void onFailure(Call<TrailerList> call, Throwable t) {
-                Toast.makeText(MovieDetailActivity.this, "FAilure", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(Call<TrailerList> call, Throwable t) {
+                        Toast.makeText(MovieDetailActivity.this, "FAilure",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void setReviewText(List<Review> reviews) {
-        for (Review review : reviews) {
-            ReviewView reviewView = new ReviewView(this);
-            reviewView.setReviewText(review.getContent());
-            mContainer.addView(reviewView);
+        if (reviews.size() > 0) {
 
+            for (Review review : reviews) {
+                ReviewView reviewView = new ReviewView(this);
+                reviewView.setReviewText(review.getContent());
+                mContainer.addView(reviewView);
+            }
+        } else {
+            mReviewLabel.setVisibility(View.GONE);
         }
     }
 

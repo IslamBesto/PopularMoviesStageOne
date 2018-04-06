@@ -39,6 +39,9 @@ public class MoviesHomeActivity extends AppCompatActivity {
 
     private GridLayoutManager mGridLayoutManager;
 
+    public static int index = -1;
+    public static int top = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,24 @@ public class MoviesHomeActivity extends AppCompatActivity {
         };
         getMostPopularMovies();
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        index = mGridLayoutManager.findFirstVisibleItemPosition();
+        View v = mMovieRecyclerView.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - mMovieRecyclerView.getPaddingTop());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //set recyclerview position
+        if(index != -1)
+        {
+            mGridLayoutManager.scrollToPositionWithOffset( index, top);
+        }
     }
 
     private void onMovieItemClickBehavior(View view, Movie movie) {

@@ -20,6 +20,8 @@ public class FavoritMoviesContract {
         public static final String COLUMN_MOVIE_TITLE= "movieTitle";
         public static final String COLUMN_MOVIE_RELEASE_DATE= "movieReleaseDate";
         public static final String COLUMN_MOVIE_ADULT= "movieAdult";
+        public static final String COLUMN_MOVIE_BACKDROP= "movieBackDrop";
+
 
     }
 

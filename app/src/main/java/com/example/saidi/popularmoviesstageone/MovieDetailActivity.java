@@ -91,7 +91,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     @BindView(R.id.review_label)
     TextView mReviewLabel;
 
+    @BindView(R.id.favorit)
+    ImageView mFavorit;
+
     private boolean mIsImageAnimated = false;
+    private boolean mIsFavorit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +120,22 @@ public class MovieDetailActivity extends AppCompatActivity {
         getReviews(movieId);
         getTrailers(movieId);
         populateUI(movie);
+        mFavorit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    if (mIsFavorit) {
+                        mFavorit.setImageDrawable(getDrawable(R.drawable.ic_favorite_border));
+                        mIsFavorit = false;
+                    } else {
+                        mFavorit.setImageDrawable(getDrawable(R.drawable.ic_favorite));
+                        mIsFavorit = true;
+                    }
+                } else {
+                    mFavorit.setImageResource(R.drawable.ic_favorite);
+                }
+            }
+        });
     }
 
     private void populateUI(Movie movie) {

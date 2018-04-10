@@ -1,12 +1,5 @@
 package com.example.saidi.popularmoviesstageone;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-
-import static org.junit.Assert.assertNotEquals;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import com.example.saidi.popularmoviesstageone.db.FavoritMovieDbHelper;
 import com.example.saidi.popularmoviesstageone.db.FavoritMoviesContract;
@@ -24,6 +16,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.lang.reflect.Field;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by saidi on 06/04/2018.
@@ -50,10 +48,11 @@ public class DatabaseTest {
     /**
      * This method tests that our database contains all of the tables that we think it should
      * contain.
+     *
      * @throws Exception in case the constructor hasn't been implemented yet
      */
     @Test
-    public void create_database_test() throws Exception{
+    public void create_database_test() throws Exception {
 
 
         /* Use reflection to try to run the correct constructor whenever implemented */
@@ -96,10 +95,11 @@ public class DatabaseTest {
     /**
      * This method tests inserting a single record into an empty table from a brand new database.
      * The purpose is to test that the database is working as expected
+     *
      * @throws Exception in case the constructor hasn't been implemented yet
      */
     @Test
-    public void insert_single_record_test() throws Exception{
+    public void insert_single_record_test() throws Exception {
 
         /* Use reflection to try to run the correct constructor whenever implemented */
         SQLiteOpenHelper dbHelper =
@@ -111,7 +111,7 @@ public class DatabaseTest {
         ContentValues testValues = new ContentValues();
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_TITLE, "test title");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ADULT, "false");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID, "123445");
+        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID, "1");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_OVERVIEW, "Overview");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_POSTER_PATH, "jpg");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_BACKDROP, "jpg");
@@ -121,7 +121,7 @@ public class DatabaseTest {
 
         /* Insert ContentValues into database and get first row ID back */
         long firstRowId = database.insert(
-               FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME,
+                FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME,
                 null,
                 testValues);
 
@@ -134,7 +134,7 @@ public class DatabaseTest {
          */
         Cursor wCursor = database.query(
                 /* Name of table on which to perform the query */
-               FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME,
+                FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME,
                 /* Columns; leaving this null returns every column in the table */
                 null,
                 /* Optional specification for columns in the "where" clause above */
@@ -162,10 +162,11 @@ public class DatabaseTest {
     /**
      * Tests to ensure that inserts into your database results in automatically
      * incrementing row IDs.
+     *
      * @throws Exception in case the constructor hasn't been implemented yet
      */
     @Test
-    public void autoincrement_test() throws Exception{
+    public void autoincrement_test() throws Exception {
 
         System.out.println("Hello StackOverflow");
 
@@ -182,7 +183,7 @@ public class DatabaseTest {
         ContentValues testValues = new ContentValues();
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_TITLE, "test title");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ADULT, "false");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID, "1445");
+        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID, "2");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_OVERVIEW, "Overview");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_POSTER_PATH, "jpg");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_BACKDROP, "jpg");
@@ -190,16 +191,6 @@ public class DatabaseTest {
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, "120");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_VOTE_COUNT, "8");
 
-        ContentValues testValues2 = new ContentValues();
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_TITLE, "test title");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ADULT, "false");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID, "12344");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_OVERVIEW, "Overview");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_POSTER_PATH, "jpg");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_BACKDROP, "jpg");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_RELEASE_DATE, "March");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, "120");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_VOTE_COUNT, "8");
 
 
         /* Insert ContentValues into database and get first row ID back */
@@ -212,11 +203,10 @@ public class DatabaseTest {
         long secondRowId = database.insert(
                 FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME,
                 null,
-                testValues2);
-        System.out.println("First Id" +firstRowId);
+                testValues);
+        System.out.println("First Id" + firstRowId);
         assertEquals("ID Autoincrement test failed!",
                 firstRowId + 1, secondRowId);
-
 
 
     }
@@ -226,10 +216,11 @@ public class DatabaseTest {
      * Tests that onUpgrade works by inserting 2 rows then calling onUpgrade and verifies that the
      * database has been successfully dropped and recreated by checking that the database is there
      * but empty
+     *
      * @throws Exception in case the constructor hasn't been implemented yet
      */
     @Test
-    public void upgrade_database_test() throws Exception{
+    public void upgrade_database_test() throws Exception {
 
         /* Insert 2 rows before we upgrade to check that we dropped the database correctly */
 
@@ -243,18 +234,7 @@ public class DatabaseTest {
         ContentValues testValues = new ContentValues();
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_TITLE, "test title");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ADULT, "false");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID, "1235544");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_OVERVIEW, "Overview");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_POSTER_PATH, "jpg");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_BACKDROP, "jpg");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_RELEASE_DATE, "March");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, "120");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_VOTE_COUNT, "8");
-
-        ContentValues testValues2 = new ContentValues();
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_TITLE, "test title");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ADULT, "false");
-        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID, "1234");
+        testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID, "4");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_OVERVIEW, "Overview");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_POSTER_PATH, "jpg");
         testValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_BACKDROP, "jpg");
@@ -272,7 +252,7 @@ public class DatabaseTest {
         long secondRowId = database.insert(
                 FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME,
                 null,
-                testValues2);
+                testValues);
 
         dbHelper.onUpgrade(database, 0, 1);
         database = dbHelper.getReadableDatabase();
@@ -317,15 +297,15 @@ public class DatabaseTest {
     /**
      * Deletes the entire database.
      */
-    void deleteTheDatabase(){
+    void deleteTheDatabase() {
         try {
             /* Use reflection to get the database name from the db helper class */
             Field f = mDbHelperClass.getDeclaredField("DATABASE_NAME");
             f.setAccessible(true);
-            mContext.deleteDatabase((String)f.get(null));
-        }catch (NoSuchFieldException ex){
+            mContext.deleteDatabase((String) f.get(null));
+        } catch (NoSuchFieldException ex) {
             fail("Make sure you have a member called DATABASE_NAME in the WaitlistDbHelper");
-        }catch (Exception ex){
+        } catch (Exception ex) {
             fail(ex.getMessage());
         }
 

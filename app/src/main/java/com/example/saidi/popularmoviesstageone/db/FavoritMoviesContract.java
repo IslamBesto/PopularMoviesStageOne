@@ -16,11 +16,11 @@ public class FavoritMoviesContract {
         public static final String COLUMN_MOVIE_POSTER_PATH = "moviePosterPath";
         public static final String COLUMN_MOVIE_VOTE_COUNT = "movieVoteCount";
         public static final String COLUMN_MOVIE_VOTE_AVERAGE = "movieVoteAverage";
-        public static final String COLUMN_MOVIE_OVERVIEW= "movieOverView";
-        public static final String COLUMN_MOVIE_TITLE= "movieTitle";
-        public static final String COLUMN_MOVIE_RELEASE_DATE= "movieReleaseDate";
-        public static final String COLUMN_MOVIE_ADULT= "movieAdult";
-        public static final String COLUMN_MOVIE_BACKDROP= "movieBackDrop";
+        public static final String COLUMN_MOVIE_OVERVIEW = "movieOverView";
+        public static final String COLUMN_MOVIE_TITLE = "movieTitle";
+        public static final String COLUMN_MOVIE_RELEASE_DATE = "movieReleaseDate";
+        public static final String COLUMN_MOVIE_ADULT = "movieAdult";
+        public static final String COLUMN_MOVIE_BACKDROP = "movieBackDrop";
 
 
     }

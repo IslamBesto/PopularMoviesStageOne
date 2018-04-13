@@ -4,6 +4,7 @@
     package="com.example.saidi.popularmoviesstageone">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.example.saidi.popularmoviesstageone.TERMS_READ" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MoviesHomeActivity"
+        <activity
+            android:name=".MoviesHomeActivity"
             android:label="@string/home">
 
             <intent-filter>
@@ -23,14 +25,19 @@
         </activity>
         <activity
             android:name=".MovieDetailActivity"
-            android:theme="@style/DetailActivityTheme"
+            android:label=""
             android:parentActivityName=".MoviesHomeActivity"
-            tools:targetApi="jelly_bean"
-            android:label=""/>
+            android:theme="@style/DetailActivityTheme"
+            tools:targetApi="jelly_bean" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <provider
+            android:name=".contentprovider.FavoritMovieContentProvider"
+            android:authorities="com.example.saidi.popularmoviesstageone"
+            android:exported="false" />
     </application>
 
 </manifest>

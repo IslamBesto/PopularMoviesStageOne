@@ -1,10 +1,12 @@
 package com.example.saidi.popularmoviesstageone;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -29,6 +31,7 @@ import com.example.saidi.popularmoviesstageone.data.model.Review;
 import com.example.saidi.popularmoviesstageone.data.model.ReviewList;
 import com.example.saidi.popularmoviesstageone.data.model.Trailer;
 import com.example.saidi.popularmoviesstageone.data.model.TrailerList;
+import com.example.saidi.popularmoviesstageone.db.FavoritMoviesContract;
 import com.example.saidi.popularmoviesstageone.ui.custom.ReviewView;
 import com.example.saidi.popularmoviesstageone.ui.viewpager.CardTrailerAdapter;
 import com.example.saidi.popularmoviesstageone.ui.viewpager.ShadowTransformer;
@@ -115,11 +118,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-        Movie movie = (Movie) intent.getSerializableExtra(Constants.MOVIE);
-        String movieId = movie.getMovieId();
+        final Movie movie = (Movie) intent.getSerializableExtra(Constants.MOVIE);
+        final String movieId = movie.getMovieId();
         getReviews(movieId);
         getTrailers(movieId);
         populateUI(movie);
+        onFavoritButtonClicked(movie);
+    }
+
+    private void onFavoritButtonClicked(final Movie movie) {
         mFavorit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,15 +134,59 @@ public class MovieDetailActivity extends AppCompatActivity {
                     if (mIsFavorit) {
                         mFavorit.setImageDrawable(getDrawable(R.drawable.ic_favorite_border));
                         mIsFavorit = false;
+                        Uri uri = FavoritMoviesContract.FavoritMovieEntry.CONTENT_URI;
+                        uri = uri.buildUpon().appendPath(movie.getMovieId()).build();
+                        int id = getContentResolver().delete(uri, null, null);
+                        Toast.makeText(MovieDetailActivity.this, Integer.toString(id),
+                                Toast.LENGTH_SHORT).show();
+
                     } else {
                         mFavorit.setImageDrawable(getDrawable(R.drawable.ic_favorite));
                         mIsFavorit = true;
+                        insertFavoritMovieToDb(movie);
                     }
                 } else {
                     mFavorit.setImageResource(R.drawable.ic_favorite);
                 }
             }
         });
+    }
+
+    private void insertFavoritMovieToDb(Movie movie) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(
+                FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_TITLE,
+                movie.getTitle());
+        contentValues.put(
+                FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ADULT,
+                movie.isAdult());
+        contentValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID,
+                movie.getMovieId());
+        contentValues.put(
+                FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_OVERVIEW,
+                movie.getOverview());
+        contentValues.put(
+                FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_POSTER_PATH,
+                movie.getPosterPath());
+        contentValues.put(
+                FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_BACKDROP,
+                movie.getBackdropPath());
+        contentValues.put(
+                FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_RELEASE_DATE,
+                movie.getReleaseDate());
+        contentValues.put(
+                FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_VOTE_AVERAGE,
+                movie.getVoteAverage());
+        contentValues.put(
+                FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_VOTE_COUNT,
+                movie.getVoteCount());
+
+        Uri uri = getContentResolver().insert(
+                FavoritMoviesContract.FavoritMovieEntry.CONTENT_URI, contentValues);
+        if (uri != null) {
+            Toast.makeText(MovieDetailActivity.this, uri.toString(),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void populateUI(Movie movie) {

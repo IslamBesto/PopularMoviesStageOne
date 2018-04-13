@@ -1,5 +1,6 @@
 package com.example.saidi.popularmoviesstageone.db;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -7,8 +8,16 @@ import android.provider.BaseColumns;
  */
 
 public class FavoritMoviesContract {
+    public static final String AUTHORITY = "com.example.saidi.popularmoviesstageone";
+
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    public static final String PATH_FAVORIT = "favorit";
 
     public static final class FavoritMovieEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_FAVORIT)
+                .build();
 
         public static final String TABLE_NAME = "favoritmovies";
         // this is movie id and not table id

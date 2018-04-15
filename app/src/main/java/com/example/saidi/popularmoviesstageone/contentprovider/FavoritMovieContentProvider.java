@@ -15,6 +15,8 @@ import android.support.annotation.Nullable;
 import com.example.saidi.popularmoviesstageone.db.FavoritMovieDbHelper;
 import com.example.saidi.popularmoviesstageone.db.FavoritMoviesContract;
 
+import static com.example.saidi.popularmoviesstageone.db.FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME;
+
 /**
  * Created by saidi on 11/04/2018.
  */
@@ -46,7 +48,44 @@ public class FavoritMovieContentProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
             @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return null;
+        final SQLiteDatabase db = mFavoritMovieDbHelper.getReadableDatabase();
+        int match = sUriMatcher.match(uri);
+        Cursor returnCursor;
+
+        switch (match) {
+
+            case FAVORITS_MOVIE:
+                returnCursor = db.query(TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+
+            case FAVORITS_MOVIE_WITH_ID:
+                String id = uri.getPathSegments().get(1);
+
+                // Selection is the _ID column = ?, and the Selection args = the row ID from the URI
+                String mSelection = "movieID=?";
+                String[] mSelectionArgs = new String[]{id};
+                returnCursor = db.query(TABLE_NAME,
+                        projection,
+                        mSelection,
+                        mSelectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+
+            default:
+                throw new android.database.SQLException("Unknown uri: " + uri);
+
+        }
+        returnCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return returnCursor;
     }
 
     @Nullable
@@ -63,7 +102,7 @@ public class FavoritMovieContentProvider extends ContentProvider {
         Uri returnUri;
         switch (match) {
             case FAVORITS_MOVIE:
-                long id = db.insert(FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME, null,
+                long id = db.insert(TABLE_NAME, null,
                         values);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(
@@ -82,7 +121,32 @@ public class FavoritMovieContentProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection,
             @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mFavoritMovieDbHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        int movieDeleted;
+
+        switch (match) {
+
+            case FAVORITS_MOVIE:
+                movieDeleted = db.delete(TABLE_NAME, selection, selectionArgs);
+                break;
+            case FAVORITS_MOVIE_WITH_ID:
+                String id = uri.getPathSegments().get(1);
+                // Selection is the _ID column = ?, and the Selection args = the row ID from the URI
+                String mSelection = "movieID=?";
+                String[] mSelectionArgs = new String[]{id};
+                movieDeleted = db.delete(TABLE_NAME,
+                        mSelection,
+                        mSelectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (movieDeleted != 0) {
+
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return movieDeleted;
     }
 
     @Override

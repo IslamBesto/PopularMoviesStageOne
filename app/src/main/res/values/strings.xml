@@ -15,4 +15,7 @@
     <string name="home">Home</string>
     <string name="reviews">Reviews</string>
     <string name="favorit">Favorit</string>
+    <string name="add_favorit">Add %1$s to favorit movies</string>
+    <string name="delete_favorit">Delete %1$s from favorit movies</string>
+    <string name="no_favorite_movies">You have no favorite movies yet</string>
 </resources>

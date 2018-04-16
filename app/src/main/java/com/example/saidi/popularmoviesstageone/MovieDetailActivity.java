@@ -1,5 +1,8 @@
 package com.example.saidi.popularmoviesstageone;
 
+import static com.example.saidi.popularmoviesstageone.db.FavoritMoviesContract.FavoritMovieEntry
+        .CONTENT_URI;
+
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -48,8 +52,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
-
-import static com.example.saidi.popularmoviesstageone.db.FavoritMoviesContract.FavoritMovieEntry.CONTENT_URI;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -162,8 +164,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     /**
      * set favorit icon status
-     *
-     * @param status
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setFavoritStatus(boolean status) {
@@ -179,8 +179,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     /**
      * delete movie from database
-     *
-     * @param movie
      */
     private void deleteMovieFromDb(Movie movie) {
         Uri uri = CONTENT_URI;
@@ -188,13 +186,20 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .appendEncodedPath(movie.getMovieId())
                 .build();
         int idDeleted = getContentResolver().delete(uri, null, null);
-        Toast.makeText(MovieDetailActivity.this, Integer.toString(idDeleted), Toast.LENGTH_SHORT).show();
+        if (idDeleted > 0) {
+
+            showSnackBar((getString(R.string.delete_favorit, movie.getTitle())));
+        }
+    }
+
+    private void showSnackBar(String message) {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.container),
+                message, Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     /**
      * Insert movie details into sqlite database
-     *
-     * @param movie
      */
     private void insertMovieInDb(Movie movie) {
         ContentValues contentValues = new ContentValues();
@@ -203,7 +208,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 movie.getTitle());
         contentValues.put(
                 FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ADULT,
-                movie.isAdult());
+                movie.isAdult() ? "true" : "false");
         contentValues.put(FavoritMoviesContract.FavoritMovieEntry.COLUMN_MOVIE_ID,
                 movie.getMovieId());
         contentValues.put(
@@ -228,14 +233,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         Uri uri = getContentResolver().insert(
                 CONTENT_URI, contentValues);
         if (uri != null) {
-            Toast.makeText(MovieDetailActivity.this, uri.toString(),
-                    Toast.LENGTH_SHORT).show();
+            showSnackBar((getString(R.string.add_favorit, movie.getTitle())));
         }
     }
 
     /**
      * Method to populate UI with data coming from server
-     * @param movie
      */
     private void populateUI(Movie movie) {
         mTitleTv.setText(movie.getTitle());

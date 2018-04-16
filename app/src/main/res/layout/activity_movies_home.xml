@@ -10,4 +10,15 @@
         android:id="@+id/movies_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/no_favorite_movie"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.6"
+        android:gravity="center"
+        android:text="@string/no_favorite_movies"
+        android:textColor="@color/textColor"
+        android:visibility="gone" />
 </FrameLayout>

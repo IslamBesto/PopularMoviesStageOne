@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.saidi.popularmoviesstageone.data.MovieService;
 import com.example.saidi.popularmoviesstageone.data.ServiceManager;
@@ -42,15 +43,14 @@ public class MoviesHomeActivity extends AppCompatActivity implements
 
 
     private static final int FAVORIT_LOADER_ID = 0;
-    @BindView(R.id.movies_rv)
-    RecyclerView mMovieRecyclerView;
-
-    MovieListClickLisener mMovieListClickLisener;
-
-    private GridLayoutManager mGridLayoutManager;
-
     public static int index = -1;
     public static int top = -1;
+    @BindView(R.id.movies_rv)
+    RecyclerView mMovieRecyclerView;
+    @BindView(R.id.no_favorite_movie)
+    TextView mNoFavorit;
+    MovieListClickLisener mMovieListClickLisener;
+    private GridLayoutManager mGridLayoutManager;
     private String TAG = MoviesHomeActivity.class.getCanonicalName();
 
     private FavoritMovieListAdapter mFavoritMovieListAdapter;
@@ -63,7 +63,7 @@ public class MoviesHomeActivity extends AppCompatActivity implements
         mGridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,
                 false);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_layout_margin);
-
+        initAndSetAdapter();
         mMovieRecyclerView.addItemDecoration(
                 new MovieGridSpacingItemDecoration(2, spacingInPixels, true, 0));
         mMovieListClickLisener = new MovieListClickLisener() {
@@ -74,6 +74,12 @@ public class MoviesHomeActivity extends AppCompatActivity implements
         };
         getMostPopularMovies();
 
+    }
+
+    private void initAndSetAdapter() {
+        mFavoritMovieListAdapter = new FavoritMovieListAdapter(getBaseContext(),
+                mMovieListClickLisener);
+        mMovieRecyclerView.setAdapter(mFavoritMovieListAdapter);
     }
 
     @Override
@@ -91,6 +97,7 @@ public class MoviesHomeActivity extends AppCompatActivity implements
         if (index != -1) {
             mGridLayoutManager.scrollToPositionWithOffset(index, top);
         }
+        getSupportLoaderManager().restartLoader(FAVORIT_LOADER_ID, null, this);
     }
 
     private void onMovieItemClickBehavior(View view, Movie movie) {
@@ -140,10 +147,8 @@ public class MoviesHomeActivity extends AppCompatActivity implements
     }
 
     private void getFavoritMovies() {
-        mFavoritMovieListAdapter = new FavoritMovieListAdapter(getBaseContext(),
-                mMovieListClickLisener);
+        initAndSetAdapter();
         getSupportLoaderManager().initLoader(FAVORIT_LOADER_ID, null, this);
-        mMovieRecyclerView.setAdapter(mFavoritMovieListAdapter);
         mMovieRecyclerView.setLayoutManager(mGridLayoutManager);
     }
 
@@ -202,15 +207,6 @@ public class MoviesHomeActivity extends AppCompatActivity implements
 
             Cursor mFavoritMovies = null;
 
-            @Override
-            protected void onStartLoading() {
-                if (mFavoritMovies != null) {
-                    deliverResult(mFavoritMovies);
-                } else {
-                    forceLoad();
-                }
-            }
-
             // loadInBackground() performs asynchronous loading of data
             @Override
             public Cursor loadInBackground() {
@@ -232,12 +228,27 @@ public class MoviesHomeActivity extends AppCompatActivity implements
                 mFavoritMovies = data;
                 super.deliverResult(data);
             }
+
+            @Override
+            protected void onStartLoading() {
+                if (mFavoritMovies != null) {
+                    deliverResult(mFavoritMovies);
+                } else {
+                    forceLoad();
+                }
+            }
         };
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mFavoritMovieListAdapter.swapCursor(data);
+        if (data.getCount() > 0) {
+            mNoFavorit.setVisibility(View.GONE);
+        } else {
+            mNoFavorit.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

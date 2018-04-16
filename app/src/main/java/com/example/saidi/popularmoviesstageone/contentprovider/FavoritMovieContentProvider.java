@@ -15,6 +15,8 @@ import android.support.annotation.Nullable;
 import com.example.saidi.popularmoviesstageone.db.FavoritMovieDbHelper;
 import com.example.saidi.popularmoviesstageone.db.FavoritMoviesContract;
 
+import static com.example.saidi.popularmoviesstageone.db.FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME;
+
 /**
  * Created by saidi on 11/04/2018.
  */
@@ -49,9 +51,11 @@ public class FavoritMovieContentProvider extends ContentProvider {
         final SQLiteDatabase db = mFavoritMovieDbHelper.getReadableDatabase();
         int match = sUriMatcher.match(uri);
         Cursor returnCursor;
+
         switch (match) {
+
             case FAVORITS_MOVIE:
-                returnCursor = db.query(FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME,
+                returnCursor = db.query(TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -59,12 +63,14 @@ public class FavoritMovieContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+
             case FAVORITS_MOVIE_WITH_ID:
                 String id = uri.getPathSegments().get(1);
-                String mSelection = "_id=?";
-                String[] mSelectionArgs = new String[]{id};
 
-                returnCursor = db.query(FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME,
+                // Selection is the _ID column = ?, and the Selection args = the row ID from the URI
+                String mSelection = "movieID=?";
+                String[] mSelectionArgs = new String[]{id};
+                returnCursor = db.query(TABLE_NAME,
                         projection,
                         mSelection,
                         mSelectionArgs,
@@ -72,11 +78,13 @@ public class FavoritMovieContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-        }
 
+            default:
+                throw new android.database.SQLException("Unknown uri: " + uri);
+
+        }
         returnCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         return returnCursor;
     }
 
@@ -94,7 +102,7 @@ public class FavoritMovieContentProvider extends ContentProvider {
         Uri returnUri;
         switch (match) {
             case FAVORITS_MOVIE:
-                long id = db.insert(FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME, null,
+                long id = db.insert(TABLE_NAME, null,
                         values);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(
@@ -113,24 +121,32 @@ public class FavoritMovieContentProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection,
             @Nullable String[] selectionArgs) {
-        // Get access to the database and write URI matching code to recognize a single item
         final SQLiteDatabase db = mFavoritMovieDbHelper.getWritableDatabase();
-
         int match = sUriMatcher.match(uri);
-        int tasksDeleted;
+        int movieDeleted;
+
         switch (match) {
+
+            case FAVORITS_MOVIE:
+                movieDeleted = db.delete(TABLE_NAME, selection, selectionArgs);
+                break;
             case FAVORITS_MOVIE_WITH_ID:
                 String id = uri.getPathSegments().get(1);
-                tasksDeleted = db.delete(FavoritMoviesContract.FavoritMovieEntry.TABLE_NAME,
-                        "movieID=?", new String[]{id});
+                // Selection is the _ID column = ?, and the Selection args = the row ID from the URI
+                String mSelection = "movieID=?";
+                String[] mSelectionArgs = new String[]{id};
+                movieDeleted = db.delete(TABLE_NAME,
+                        mSelection,
+                        mSelectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        if (tasksDeleted != 0) {
+        if (movieDeleted != 0) {
+
             getContext().getContentResolver().notifyChange(uri, null);
         }
-        return tasksDeleted;
+        return movieDeleted;
     }
 
     @Override

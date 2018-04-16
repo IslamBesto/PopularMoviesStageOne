@@ -14,4 +14,5 @@
     <string name="picture_transition_name">poster_image_transition</string>
     <string name="home">Home</string>
     <string name="reviews">Reviews</string>
+    <string name="favorit">Favorit</string>
 </resources>

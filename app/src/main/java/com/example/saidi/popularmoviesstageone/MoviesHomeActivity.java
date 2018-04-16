@@ -1,12 +1,20 @@
 package com.example.saidi.popularmoviesstageone;
 
+import static com.example.saidi.popularmoviesstageone.db.FavoritMoviesContract.FavoritMovieEntry
+        .CONTENT_URI;
+
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,11 +24,11 @@ import com.example.saidi.popularmoviesstageone.data.MovieService;
 import com.example.saidi.popularmoviesstageone.data.ServiceManager;
 import com.example.saidi.popularmoviesstageone.data.model.Movie;
 import com.example.saidi.popularmoviesstageone.data.model.MovieList;
+import com.example.saidi.popularmoviesstageone.ui.FavoritMovieListAdapter;
 import com.example.saidi.popularmoviesstageone.ui.MovieGridSpacingItemDecoration;
 import com.example.saidi.popularmoviesstageone.ui.MovieListClickLisener;
 import com.example.saidi.popularmoviesstageone.ui.MoviesListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,9 +37,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MoviesHomeActivity extends AppCompatActivity {
+public class MoviesHomeActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor> {
 
 
+    private static final int FAVORIT_LOADER_ID = 0;
     @BindView(R.id.movies_rv)
     RecyclerView mMovieRecyclerView;
 
@@ -41,6 +51,9 @@ public class MoviesHomeActivity extends AppCompatActivity {
 
     public static int index = -1;
     public static int top = -1;
+    private String TAG = MoviesHomeActivity.class.getCanonicalName();
+
+    private FavoritMovieListAdapter mFavoritMovieListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +88,8 @@ public class MoviesHomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //set recyclerview position
-        if(index != -1)
-        {
-            mGridLayoutManager.scrollToPositionWithOffset( index, top);
+        if (index != -1) {
+            mGridLayoutManager.scrollToPositionWithOffset(index, top);
         }
     }
 
@@ -117,6 +129,9 @@ public class MoviesHomeActivity extends AppCompatActivity {
             case R.id.most_popular:
                 getMostPopularMovies();
                 return true;
+            case R.id.favorit:
+                getFavoritMovies();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -124,16 +139,22 @@ public class MoviesHomeActivity extends AppCompatActivity {
 
     }
 
+    private void getFavoritMovies() {
+        mFavoritMovieListAdapter = new FavoritMovieListAdapter(getBaseContext(),
+                mMovieListClickLisener);
+        getSupportLoaderManager().initLoader(FAVORIT_LOADER_ID, null, this);
+        mMovieRecyclerView.setAdapter(mFavoritMovieListAdapter);
+        mMovieRecyclerView.setLayoutManager(mGridLayoutManager);
+    }
+
     private void setData(List<Movie> movies) {
         MoviesListAdapter moviesListAdapter = new MoviesListAdapter(this, movies,
                 mMovieListClickLisener);
         mMovieRecyclerView.setAdapter(moviesListAdapter);
         mMovieRecyclerView.setLayoutManager(mGridLayoutManager);
-
     }
 
     private void getMostPopularMovies() {
-        final List<Movie> moviesList = new ArrayList<>();
         ServiceManager.createService(MovieService.class).getPopularMovies().enqueue(
                 new Callback<MovieList>() {
                     @Override
@@ -149,7 +170,6 @@ public class MoviesHomeActivity extends AppCompatActivity {
     }
 
     private void getTopRatedMovies() {
-        final List<Movie> moviesList = new ArrayList<>();
         ServiceManager.createService(MovieService.class).getTopRatedMovies().enqueue(
                 new Callback<MovieList>() {
                     @Override
@@ -173,5 +193,57 @@ public class MoviesHomeActivity extends AppCompatActivity {
             }
         });
         errorSnackBar.show();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<Cursor>(this) {
+
+
+            Cursor mFavoritMovies = null;
+
+            @Override
+            protected void onStartLoading() {
+                if (mFavoritMovies != null) {
+                    deliverResult(mFavoritMovies);
+                } else {
+                    forceLoad();
+                }
+            }
+
+            // loadInBackground() performs asynchronous loading of data
+            @Override
+            public Cursor loadInBackground() {
+                try {
+                    return getContentResolver().query(CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            null);
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to asynchronously load data.");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            public void deliverResult(Cursor data) {
+                mFavoritMovies = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mFavoritMovieListAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        {
+            mFavoritMovieListAdapter.swapCursor(null);
+        }
     }
 }
